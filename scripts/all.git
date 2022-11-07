@@ -1,0 +1,36 @@
+主干合入分支： 
+分支开发
+Git branch，确认在自己分支
+Git status 查看分支状态，有无更新的代码
+有：Git add，git commit
+Git checkout master，切到master分支
+Git pull 确保本地的master分支更新为线上最新的
+Git checkout 自己分支，
+Git merge master 将本地master合入自己本地分支
+Git push ，将本地分支push到icode上，
+本地合入后，找RD打分，通过点击icode上的合入，才完成合入到自己的icode分支
+点icode合入完，后就在agile上找到 branchpipeline 准入（小流量号格式），提测（填写提测单，找QA免测通过），在上线群里搭车上线
+
+
+合入主干：
+Git checkout 自己分支
+Git pull，确保本地分支和icode上自己的分支没有diff
+Git diff，查看diff
+Git checkout master，切到master分支
+Git pull ，确保本地的master分支和线上的没有diff
+Git diff，查看diff
+Git merge 自己分支： 将自己本地分支合入到本地master分支
+Git push ：将本地master分支push到icode上
+本地合入完找RD，QA评分合入，通过点击icode合入，才是最终合入线上masterpipeline
+ 
+1.首先更新本地镜像的代码
+git fetch origin master
+2.执行reset命令将本地已经commit但尚未合并到远程仓库master分支的代码回滚到开发空间中
+git reset --soft origin/master
+注：因为加了--soft参数，因此修改的代码不会丢失，会从本地仓库回到尚未add的状态
+3.git status可以查看废弃的评审对应修改的代码，现在处于未提交的状态，确认代码没有问题进行下一步
+若代码有问题，请自行修改
+4.重新add>commit，再次push后，就会在icode上生成一张新的评审单。
+git add .
+git commit -m "some comments"
+git push origin HEAD:refs/for/master

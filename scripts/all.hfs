@@ -1,0 +1,28 @@
+1. ls <path> 列出路径指定的目录中的内容，示出了名称，权限，拥有者，大小和修改日期的每个条目。
+2. lsr <path> 行为类似于-ls，但递归显示路径的所有子目录项。
+3. du <path> 显示磁盘使用率，以字节为单位，对所有的文件，这些文件匹配的路径;文件名报告使用完整HDFS协议前缀。
+4. dus <path> 类似-du，但打印路径中的所有文件/目录的磁盘使用情况的摘要。
+5. mv <src><dest> 通过移动表示src到dest，在HDFS的文件或目录。
+6. cp <src> <dest> 在HDFS复制确定src中的文件或目录到dest。
+7. rm <path> 删除文件或路径标识的空目录。
+8. rmr <path> 删除路径标识的文件或目录。递归删除所有子条目（例如，文件或路径的子目录）。
+9. put <localSrc> <dest> 从本地localSrc文件系统中的DFS标识文件或目录内复制到dest。
+10. copyFromLocal <localSrc> <dest> 等同于-put
+11. moveFromLocal <localSrc> <dest> 从标识 localSrc本地文件系统中的文件或目录中HDFS复制到dest，然后删除本地副本上成功。
+12. get [-crc] <src> <localDest> 拷贝标识 src 来确定localDest本地文件系统路径HDFS文件或目录。
+13. getmerge <src> <localDest> 检索匹配的路径的src HDFS中的所有文件，并将它们复制合并文件到标识localDest本地文件系统中。
+14. cat <filen-ame> 显示在标准输出文件名的内容。
+15. copyToLocal <src> <localDest> 等同于 -get
+16. moveToLocal <src> <localDest> 工作方式类似于-get，但删除HDFS复制成功。
+17. mkdir <path> 在创建一个HDFS命名的目录路径。创建任何父目录的路径丢失（例如，命令mkdir-p在Linux中）。
+18. setrep [-R] [-w] rep <path> 设置标识路径代表文件的目标文件复制因子。 （实际的复制因子会向着随着时间的推移目标移动）
+19. touchz <path> 创建在路径包含当前时间作为时间戳的文件。失败如果文件已经存在于路径，除非文件已经大小为0。
+20. test -[ezd] <path> 返回1，如果路径存在;长度为零;或者是一个目录，否则为0。
+21. stat [format] <path> 打印有关的路径信息。格式是接受块文件大小（％b），文件名（％n），块大小（%o），复制（％r）和修改日期（％y，％Y）的字符串。
+22. tail [-f] <file2name> 显示在标准输出文件的最后1KB。
+23. chmod [-R] mode,mode,... <path>... 变化符合路径标识的一个或多个对象关联的文件权限....递归执行变更与R.模式是3位八进制模式，或{augo}+/-{rwxX}。假设如果没有指定范围，则不适用umask。
+24. chown [-R] [owner][:[group]] <path>... 设置拥有用户和/或组标识路径的文件或目录....设置所有者递归，如果指定-R。
+25. chgrp [-R] group <path>... 设置所属组标识路径的文件或目录....设置组递归，如果指定-R。
+26. help <cmd-name> 返回使用上面列出的命令之一信息。必须省略了'-' 字符在cmd。
+hfs fs -du /user/nlp-aurora/ | awk -F ' ''{printf "%.2fGB\t\t%s\n", $1/1024/1024/1024,$2}' | sort -n 查看afs上文件大小，GB单位，按大小排序
+hadoop fs -D hadoop.job.ugi=xxx -D fs.default.name=xx -getmerge  afs://yinglong.afs.baidu.com:9902/user/feed_rcmc/job_data/production/rcmc_data/${cur_day}/00/local_ec_nid_set_video z_${cur_day}_00.gz
