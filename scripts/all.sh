@@ -36,7 +36,7 @@ do
         echo "${day} remain again"
         continue
     fi
-    wget -P ${DATA_DIR} ftp://local_ec:local_ec@sh01-www-mola0260.sh01.baidu.com//home/disk1/yangjintai/workspace/jobs/local_video_report/result/${cur_day}/active_${cur_day}
+    wget -P ${DATA_DIR} ftp://local_ec:local_ec@xxx//home/disk1/yangjintai/workspace/jobs/local_video_report/result/${cur_day}/active_${cur_day}
     if [ ! -f ${DATA_DIR}/${day} ]; then
         echo "miss rdc_file ${day}"
         exit -1
