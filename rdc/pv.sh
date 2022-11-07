@@ -5,9 +5,9 @@ JOB_NAME=feed_production_hour_miniapp_icf_train_${run_day}
 HADOOP=/home/work/.hmpclient/bin/hadoop
 HADOOP_CONF=/home/work/.hmpclient/hadoop-client/hadoop/conf/hadoop-site-vertical.xml
 
-SHOW_PATH=afs://szth.afs.baidu.com:9902/user/feed_rdc/archive/shoubai-rdc-new/video-hotmodel-pipe/${run_day}/all_host_data
+SHOW_PATH=afs://xxx:9902/user/feed_rdc/archive/shoubai-rdc-new/video-hotmodel-pipe/${run_day}/all_host_data
 
-OUTPUT_PATH=afs://tianqi.afs.baidu.com:9902/user/feed/vertical/job_data/production/vertical_common/wangmengfei01/miniapp/itemcf/train/2099${run_day:4:4}/00
+OUTPUT_PATH=afs://xxx:9902/user/feed/vertical/job_data/production/vertical_common/wangmengfei01/miniapp/itemcf/train/2099${run_day:4:4}/00
 
 HDFS_TOOL=/user/feed/vertical/tools
 

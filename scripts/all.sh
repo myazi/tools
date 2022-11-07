@@ -16,7 +16,7 @@ GRAHP_TRY_DAY=10
 IP_FILE='run_daily.pid'
 if [ -f ./$IP_FILE ];then
     date +%Y-%m-%d:%H-%M-%S
-    echo "gicf not over" | mutt shijin01@baidu.com,liushaojie06@baidu.com,xiaotao02@baidu.com,yingwenjie@baidu.com,huanghua02@baidu.com,wangpeijian01@baidu.com,liguanghui02@baidu.com,wangchangzhi@baidu.com,wenhao04@baidu.com,zhangxiang20@baidu.com -s "last not finish"
+    echo "gicf not over" | mutt yingwenjie@baidu.com -s "last not finish"
     exit
 fi
 
@@ -44,7 +44,7 @@ do
 
     cat ${DATA_DIR}/active_${day} ${DATA_DIR}/active_${cur_day} > ${DATA_DIR}/${day}_active_tmp
 
-    hadoop fs -D hadoop.job.ugi=feed_vertical,Tg28D3 -D fs.default.name=afs://tianqi.afs.baidu.com:9902 -getmerge  afs://yinglong.afs.baidu.com:9902/user/feed_rcmc/job_data/production/rcmc_data/${cur_day}/00/local_ec_nid_set_video z_${cur_day}_00.gz
+    hadoop fs -D hadoop.job.ugi=xxx -D fs.default.name=xx -getmerge  afs://yinglong.afs.baidu.com:9902/user/feed_rcmc/job_data/production/rcmc_data/${cur_day}/00/local_ec_nid_set_video z_${cur_day}_00.gz
 
     /opt/compiler/gcc-8.2/lib/ld-linux-x86-64.so.2 --library-path /opt/compiler/gcc-8.2/lib `which python` ${BIN}/get_gender_cate_tags.py ${DATA_DIR}/nid_file_${cur_day} > ${DATA_DIR}/nid_dict_${cur_day}
 done
@@ -70,6 +70,8 @@ do
     done
 done
 
+    ###读数据库获取历史数据
+    mysql -u root -p123456 -D yongshangyiti -e "select mthid, author from all_nid_details" > ${DATA_DIR}/history_mthid_details;
 #sort -t $'\t' -k 3n ./data/random_res_kmeans_qinggan > ./data/sort_random_res_kmeans_qinggan
     mysql --local-infile -uroot -p123456 yongshangyiti -e "LOAD DATA LOCAL INFILE  '${RESULT_DIR}/ertiao_nid_${day}'  REPLACE INTO TABLE microv_nid_info  FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' (event_day,nid,author,title,duration,public_time,click,short,finish_prob,finish_rate,zhuanhua,zhuanhua_show,dur_join_scc,like_v,follow,share,comment_view,dislike,active_join_scc,mthid,convert_type)"
 

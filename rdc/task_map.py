@@ -36,7 +36,7 @@ def get_ip_and_port_by_bns(bns):
     url = "http://" + str(ret[0]) + ":" + str(ret[1])
     return url
 
-bns = "group.gpu-mixer-T4-bvcaurora.STPD.all"
+bns = "xxx.all"
 server_add = get_ip_and_port_by_bns(bns)
 
 data_dict = {}

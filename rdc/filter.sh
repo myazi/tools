@@ -37,7 +37,7 @@ HOUR=24
 for((i=0;i<${HOUR};i++));
 do
     hh=`echo ${i} | awk '{printf("%02d\n",$0)}'`
-    INPUT_PATH="afs://baihua.afs.baidu.com:9902/user/sasd-dqadisp/wise_log/mergedata_v/${day}/${hh}/complete.success"
+    INPUT_PATH="afs://xxx/user/sasd-dqadisp/wise_log/mergedata_v/${day}/${hh}/complete.success"
     hfs fs -D hadoop.job.ugi="sasd-dqadisp,298571" -test -e ${INPUT_PATH}
     if [ $? -ne 0 ]; then
         echo "no_finish"
@@ -47,7 +47,7 @@ do
     fi
 done
 echo "starting"
-hfs distcp -m 200 -su sasd-dqadisp,298571 -du nlp-aurora,aurora@2021 afs://baihua.afs.baidu.com:9902/user/sasd-dqadisp/wise_log/mergedata_v/${day} /user/nlp-aurora/yingwenjie/query/query_log_${day}
+hfs distcp -m 200 -su username,passwd -du username2,passwd afs1 afs2
 
 HDFS_TOOL=/user/nlp-aurora/yingwenjie/
 HADOOP_INPUT_TEST=/user/nlp-aurora/yingwenjie/query/query_log_${day}/*/part-*-A.gz
@@ -116,8 +116,8 @@ for i in $file_all
 do
      echo $i >> ${dir}/part_complete
 done 
-hfs fs -put $dir afs://xiangshan.afs.baidu.com:9902/user/nlp-aurora/kgdata/querys
-hfs fs -mv afs://xiangshan.afs.baidu.com:9902/user/nlp-aurora/kgdata/querys/query_filter_${day}_filter_spo_dir afs://xiangshan.afs.baidu.com:9902/user/nlp-aurora/kgdata/querys/${day}
+hfs fs -put $dir afs://xxx:9902/user/nlp-aurora/kgdata/querys
+hfs fs -mv afs://xxx:9902/user/nlp-aurora/kgdata/querys/query_filter_${day}_filter_spo_dir afs://xxx:9902/user/nlp-aurora/kgdata/querys/${day}
 
 ddd=`expr $dd + 10`
 history_day=`date -d "-${ddd} days" +%Y%m%d`

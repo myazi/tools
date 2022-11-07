@@ -73,8 +73,6 @@ def write_email_day(data, title, event_day):
     content_str += ('''<h1>  </h1>''' + content_str2)
 
 
-    #email = "yingwenjie@baidu.com,shijin01@baidu.com, yangjintai@baidu.com,xiaotao02@baidu.com,liushaojie06@baidu.com,huanghua02@baidu.com,zhangweiwei05@baidu.com"
-    #email = "yingwenjie@baidu.com,shijin01@baidu.com,xiaotao02@baidu.com,liushaojie06@baidu.com"
     email = "yingwenjie@baidu.com"
     print(email)
     print(content_str)
@@ -158,7 +156,7 @@ def get_ip_and_port_by_bns(bns):
     ret = items[random.randint(0, len(items) - 1)]
     url = "http://" + str(ret[0]) + ":" + str(ret[1])
     return url
-bns = "group.gpu-mixer-T4-bvcaurora.STPD.all"
+bns = "xxx.all"
 url = get_ip_and_port_by_bns(bns)
     if in_batch_cnt == batch_size:
         json_str = json.dumps(data_dict, encoding='utf8')
