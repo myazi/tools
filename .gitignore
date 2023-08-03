@@ -2,6 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
+data
+log
+logs
+nohup.out
+lib
+output
 
 # C extensions
 *.so

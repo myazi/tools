@@ -10,8 +10,8 @@ requests.adapters.DEFAULT_RETRIES = 5
 
 # 伪装浏览器
 HEADERS ={
-    #'User-Agent':'Mozilla/5.(Windows NT 10.0; WOW64) AppleWebKit/537.3(KHTML, like Gecko) Chrome/63.0.3239.13Safari/537.36',
-    'User-Agent':'Mozilla/5.(Windows NT 10.0; WOW64) AppleWebKit/537.3(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+    'User-Agent':'Mozilla/5.(Windows NT 10.0; WOW64) AppleWebKit/537.3(KHTML, like Gecko) Chrome/63.0.3239.13Safari/537.36',
+    #'User-Agent':'Mozilla/5.(Windows NT 10.0; WOW64) AppleWebKit/537.3(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
     'Host':'www.dy2018.com'
 }
 
@@ -43,23 +43,25 @@ def getHref(url):
     return htmlAll
 
 key_map = {
-        "movie_title" : ["片名","片名","影片原名","原片名","中文名","中文名称","中文片名","中文译名","原名"],
+        "movie_title" : ["片名","影片原名","原片名","中文名","中文名称","中文片名","中文译名","原名"],
         "translation" : ["译名","别名","外文别名","英文名","英文别名","又名"],
         "director" : ["导演", "编剧"],
         "stars" : ["主演","演员","主要演员"],
         "category" : ["类别","影片类型","类型"],
         "tags" : ["标签"],
-        "douban_score" : ["IMDb评分","豆瓣评分","IMDB评分"],
+        "douban_score" : ["IMDb评分","豆瓣评分","IMDB评分","评分"],
         "movie_place" : ["产地","国家","国家地区","地区"],
-        "release_date": ["上映日期","年代","出品年代","上映","上映时间","首映日期","首映"],
-        "introduction" : ["简介","电影简介","剧情","剧情介绍","剧情简介","内容介绍","影片简评","主演介绍"],
+        "release_date": ["上映日期","年代","出品年代","上映","上映时间","首映日期","首映","北美上映日期"],
+        "introduction" : ["简介","电影简介","剧情","剧情介绍","剧情简介","内容介绍","影片简评","主演介绍","内容简介"],
         "awards" : ["获奖情况","获奖","获奖记录","获得奖项"],
-        "language" : ["语言","对白语言"],
+        "language" : ["语言","对白语言","对白"],
         "subtitle" : ["字幕","字幕语言"],
         "file_length" : ["片长","时长","影片时长","影片长度"],
-        "other" : ["点评","影片评价","相关评论","一句话评论","影评","影片评论","站长点评","友情提醒","电影花絮","花絮","幕后","幕后故事","幕后花絮","幕后制作","格式","文件格式","配音","视频尺寸","视频大小","文件大小","文件体积","下载地址","迅雷下载地址","影片班底","影片长度","影片级别","影片截图","影片颜色","影片制作","精彩对白","穿帮镜头","导演阐述","关于导演","关于演员","关于影片","关于原著","关于原著作者","精彩对白","惊险一幕","剧本","影片幕后","有关影片","出品公司","发行公司"]
+        "other" : ["点评","影片评价","相关评论","一句话评论","影评","影片评论","站长点评","友情提醒","电影花絮","花絮","幕后","幕后故事","幕后花絮","幕后制作","格式","文件格式", \
+                "配音","视频尺寸","视频大小","文件大小","文件体积","下载地址","迅雷下载地址","影片班底","影片长度","影片级别","影片截图","影片颜色","影片制作","精彩对白","穿帮镜头", \
+                "导演阐述","关于导演","关于演员","关于影片","关于原著","关于原著作者","精彩对白","惊险一幕","剧本","影片幕后","有关影片","出品公司","发行公司","影片看点","电影原声","电影讲堂", \
+               "影片故事"]
         }
-
 # 使用content解析电影详情页，并获取详细信息数据
 def getPage(url):
     html = getUrlText(url,'c')
@@ -81,15 +83,18 @@ def getPage(url):
         '''
         return info.replace(rule,'').strip()
     pre_key = ""
+    history_v = set()
     for index,t in enumerate(mContnent):
         t = t.replace(u'\u200b', '').replace("\r\n","") ##去除无效字符
-        stop_key = [" ", "　","◎","【","】",":","："] ##去除修饰符
+        stop_key = [" ", "　","◎","【","】",":","：","★","◆","◇"," "] ##去除修饰符
         for key in stop_key:
             t = t.replace(key,"")
+        if t == "": continue # 不要空值
         flag = False
         for key in key_map:
             for v in key_map[key]:
-                if t.startswith(v):
+                if t.startswith(v) and v not in history_v:
+                    history_v.add(v)
                     movieInfo.setdefault(key, [])
                     movieInfo[key].append(pares_info(t,v))
                     flag = True
@@ -105,20 +110,20 @@ def getPage(url):
 # 获取前n页所有电影的详情页href
 def spider():
     movies = []
-    m = 0
-    n = 100
+    m = 1
+    n = 400
     for k in range(0,1):
         #print("index===========" + str(k))
         for i in range(m,n+1):
             if i == 1:
                 #url = "https://www.dy2018.com/html/gndy/dyzz/" ##最新
-                url = "https://www.dy2018.com/html/gndy/jddyy/" ##经典
-                #url = "https://www.dy2018.com/html/gndy/jddy/" ##综合
+                #url = "https://www.dy2018.com/html/gndy/jddyy/" ##经典
+                url = "https://www.dy2018.com/html/gndy/jddy/" ##综合
                 #url = "https://www.dy2018.com/" + str(k) + "/"
             else:
                 #base_url = 'https://www.dy2018.com/html/gndy/dyzz/index_{}.html' ##最新
-                base_url = "https://www.dy2018.com/html/gndy/jddyy/index_{}.html" ##经典
-                #base_url = "https://www.dy2018.com/html/gndy/jddy/index_{}.html" ##综合
+                #base_url = "https://www.dy2018.com/html/gndy/jddyy/index_{}.html" ##经典
+                base_url = "https://www.dy2018.com/html/gndy/jddy/index_{}.html" ##综合
                 #base_url = "https://www.dy2018.com/" + str(k) + "/index_{}.html"
                 url = base_url.format(i)
             moveHref = getHref(url)

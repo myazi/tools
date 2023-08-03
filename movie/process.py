@@ -13,7 +13,7 @@ seg_list = ["movie_title", "translation", "movie_name", "director", "stars", "ca
 seg_map = {
         "movie_title": "电影名", \
         "translation": "电影别名", \
-        "movie_name": "电影全名", \
+        "movie_name": "电影扩展名", \
         "director": "导演", \
         "stars": "演员", \
         "category": "分类", \
@@ -34,21 +34,24 @@ for key in seg_list:
 
 def post(key, value_list):
     post_value = []
-    top_v = 10 #每个字段只要前10个值
+    top_v = 7 #每个字段只要前7个值
     for value in value_list:
         top_v -= 1
         if top_v < 0: continue
-        if(key == "stars"): value.replace(".","") ##stars字段中剔除.
+        if(key == "stars"): value = value.replace('.','') ##stars字段中剔除.
         if value == "": continue ##过滤掉为空的value
         values = value.strip().split("/")
         for v in values:
             post_value.append(v)
-            seg_set[key].setdefault(v, 0)
-            seg_set[key][v] += 1
+            #if key in ("movie_title", "translation", "director", "stars", "category", "tags", "movie_place"):
+            if key in ("category", "tags", "movie_place"):
+                seg_set[key].setdefault(v, 0)
+                seg_set[key][v] += 1
     post_value = " ".join(post_value)
     return post_value
 
 uniq_moive = set()       
+pid = 1
 for line in sys.stdin:
     try:
         line_json = json.loads(line)
@@ -61,16 +64,17 @@ for line in sys.stdin:
         value = line_json.get(key, [])
         post_value = post(key, value)
         if(key == "douban_score"):
-            if(value== []): continue
+            if(value== []): continue # 无豆瓣评分
             value_list = value[0].strip().split("from")
             if(len(value_list) < 2): continue
             score = value_list[0].split("/")[0]
-            users = value_list[1].replace("users","").replace(",","")
+            users = value_list[1].replace("users","").replace(",","").replace("人评价","").replace("votes","")
             res.append("豆瓣评分" + ": " + str(score))
             res.append("用户数" + ": " + str(users))
         else:
+            if post_value == "": continue #字段值为空，则不拼接
             res.append(name + ": " + post_value)
-    movie_name = line_json.get("movie_name","")
+    movie_name = line_json.get("movie_name",[])[0]
     movie_url = line_json.get("movie_url","")
     if movie_url not in uniq_moive:
         uniq_moive.add(movie_url)
@@ -78,27 +82,29 @@ for line in sys.stdin:
             index1 = movie_name.index("《")
             index2 = movie_name.index("》")
             movie_name = movie_name[index1+1: index2]
+            #seg_set[key].setdefault(v, 0)
+            #seg_set[key][v] += 1
         except:
             pass
-        if movie_name != "":
-            print(movie_name + "\t" + "，".join(res) + "\t" + movie_url)
-        else:
-            print(res.get("movie_title") + "\t" + "，".join(res) + "\t" + movie_url)
-
-"""
+        #if movie_name != "":
+        #    print(str(pid) + "\t" + movie_url + "\t" + movie_name + "\t" + "，".join(res))
+        #else:
+        #    print(str(pid) + "\t" + movie_url + "\t" + res.get("movie_title") + "\t" + "，".join(res))
+        pid += 1
 v_set = set()
 for key in seg_set:
     if len(seg_set[key]) != 0:
         for v in seg_set[key]:
             #print(seg_map.get(key,"") + ":  "  + v)
-            if len(v.encode()) < 5 or len(v.encode()) > 50: continue
-            if key == "movie_title" or key == "movie_title":
+            if len(v.encode()) < 5 or len(v.encode()) > 30: continue
+            if key == "movie_title" or key == "movie_name" or key == "translation":
                 v_set.add(v)
             else:
-                if seg_set[key][v] > 2:
+                if seg_set[key][v] > 1:
                     v_set.add(v)
 for v in v_set:
     print(v)
+"""
 print("===================")
 with open("query_pv_all_utf8_ys_uniq", encoding="utf8") as f:
     for line in f:
@@ -106,5 +112,4 @@ with open("query_pv_all_utf8_ys_uniq", encoding="utf8") as f:
             if v in line:
                 print(v + " : " + line.strip())
                 break
-
 """
