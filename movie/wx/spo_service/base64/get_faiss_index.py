@@ -1,8 +1,6 @@
 """
 get faiss index
 
-Authors: zhangyongyue(zhangyongyue@baidu.com)
-Date:    2021/09/27
 """
 
 #!/usr/bin/env python3

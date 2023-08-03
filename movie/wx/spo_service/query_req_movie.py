@@ -221,9 +221,12 @@ def search(query):
     logfile_path = os.path.dirname(os.path.abspath(__file__)) + "/logs/kg_request_controller.log"
     Req_Logger = Logger(logfile=logfile_path, logname="RequestFaiss")
     thread_pool_size = 10
+    #recall_bns_addr = "127.0.0.1:8087/recall_q"
+    #rank_bns_addr  = "127.0.0.1:8082/music"
+    #search_ip_addr = "127.0.0.1:8084"
     recall_bns_addr = "127.0.0.1:8087/recall_q"
-    rank_bns_addr  = "127.0.0.1:8082/music"
-    search_ip_addr = "127.0.0.1:8084"
+    rank_bns_addr  = "127.0.0.1:8081/spo"
+    search_ip_addr = "127.0.0.1:8085"
     mrc_ip_addr = 0
     file_id = "0"
     q_req = GetQueryRes(thread_pool_size)

@@ -110,20 +110,20 @@ def getPage(url):
 # 获取前n页所有电影的详情页href
 def spider():
     movies = []
-    m = 1
+    m = 250
     n = 400
     for k in range(0,1):
         #print("index===========" + str(k))
         for i in range(m,n+1):
             if i == 1:
-                #url = "https://www.dy2018.com/html/gndy/dyzz/" ##最新
+                url = "https://www.dy2018.com/html/gndy/dyzz/" ##最新
                 #url = "https://www.dy2018.com/html/gndy/jddyy/" ##经典
-                url = "https://www.dy2018.com/html/gndy/jddy/" ##综合
+                #url = "https://www.dy2018.com/html/gndy/jddy/" ##综合
                 #url = "https://www.dy2018.com/" + str(k) + "/"
             else:
-                #base_url = 'https://www.dy2018.com/html/gndy/dyzz/index_{}.html' ##最新
+                base_url = 'https://www.dy2018.com/html/gndy/dyzz/index_{}.html' ##最新
                 #base_url = "https://www.dy2018.com/html/gndy/jddyy/index_{}.html" ##经典
-                base_url = "https://www.dy2018.com/html/gndy/jddy/index_{}.html" ##综合
+                #base_url = "https://www.dy2018.com/html/gndy/jddy/index_{}.html" ##综合
                 #base_url = "https://www.dy2018.com/" + str(k) + "/index_{}.html"
                 url = base_url.format(i)
             moveHref = getHref(url)

@@ -3,8 +3,6 @@
 """
 get faiss index
 
-Authors: zhangyongyue(zhangyongyue@baidu.com)
-Date:    2021/12/09
 """
 
 import time
@@ -55,7 +53,7 @@ class RequestFaiss(object):
                     "k": k,
                     "query": query,
                     "query_id": query_id,
-                    "nprobe": ef
+                    "ef": ef
                 }
                 httppost.set_data(data)
                 start_time = time.time()

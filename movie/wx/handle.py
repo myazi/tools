@@ -6,12 +6,61 @@ import receive
 import web
 import json
 import re
+import time 
 from spo_service.query_req_movie import search
 
 class Handle(object):
+
+    def process(self, fromUser, toUser, createTime, query):
+        log_file = open("wx.log", 'a+')
+        nid_res = search(query)
+        process_res = []
+        tp_set = set()
+        for one in nid_res:
+            url = one.get("sid", "null")
+            score = one.get("s", "")
+            title = one.get("t", "")
+            paras = one.get("p", "")
+            para_list = paras.split('，')
+            actor = ""
+            director = ""
+            for para in para_list:
+                if para.startswith("演员:"):
+                    actor = re.sub('[a-zA-Z]', '', para)
+                    actor = actor.replace("\xa0","")
+                if para.startswith("导演:"):
+                    director = re.sub('[a-zA-Z]', '', para)
+            tp = title + "_" + director
+            if (score > 0.6 and tp not in tp_set and len(process_res) < 5):
+                #process_res.append([title, director, actor, url])
+                process_res.append([title, str(score), actor, url])
+                tp_set.add(tp)
+        log_file.write(createTime + "\t" + fromUser + "\t" + toUser + "\t" + query + "\t" + str(process_res) + '\n')
+        return process_res
+
     def GET(self):
         try:
             data = web.input()
+            query = data.get("query", "")
+            if query == "": return "query is null"
+            fromUser = "web"
+            toUser = "web"
+            createTime = str(int(time.time()))
+            process_res = self.process(fromUser, toUser, createTime, query)
+            content = []
+            for one in process_res:
+                title = one[0]
+                director = one[1]
+                actor = one[2]
+                url = one[3]
+                title = "<a href=\"" + url  + "\">" + title + "</a>"
+                content.append("<br>".join([title, director, actor]).replace("\xa0",""))
+            if len(content) == 0:
+                content = "null"
+            else:
+                content = "<br><br>".join(content)
+            return content.encode("gbk")
+
             if len(data) == 0:
                 return "hello, this is handle view"
             signature = data.signature
@@ -33,36 +82,6 @@ class Handle(object):
         except Exception as Argument:
             return Argument
 
-    def process(self, fromUser, createTime, query):
-        nid_res = search(query)
-        if len(nid_res) == 0:
-            return "null" #无结果,返回null
-        content = []
-        tp_set = set()
-        for one in nid_res:
-            url = one.get("sid", "null")
-            score = one.get("s", "")
-            title = one.get("t", "")
-            para = one.get("p", "")
-            para_list = para.split('，')
-            actor = ""
-            director = ""
-            for para in para_list:
-                if para.startswith("演员:"):
-                    actor = re.sub('[a-zA-Z]', '', para)
-                    actor = actor.replace("\xa0","")
-                if para.startswith("导演:"):
-                    director = re.sub('[a-zA-Z]', '', para)
-            tp = title + "_" + director
-            if (score > 0.8 and tp not in tp_set and len(content) < 3):
-                content.append("\n".join([title, director, actor, "资源地址: " + url]))
-                tp_set.add(tp)
-        print(createTime + "\t" + fromUser + "\t" + query + "\t" + str(content))
-        if len(content) > 0:
-            return "\n\n".join(content)
-        else:
-            return "null"
-
     def POST(self):
         try:
             webData = web.data()
@@ -73,7 +92,19 @@ class Handle(object):
                 createTime = recMsg.CreateTime
                 msgType = recMsg.MsgType
                 content = recMsg.Content.decode("utf8")
-                content = self.process(fromUser, createTime, content)
+                process_res = self.process(fromUser, toUser, createTime, content)
+                content = []
+                for one in process_res:
+                    title = one[0]
+                    director = one[1]
+                    actor = one[2]
+                    url = one[3]
+                    title = "<a href=\"" + url  + "\">" + title + "</a>"
+                    content.append("\n".join([title, director, actor]))
+                if len(content) == 0:
+                    content = "null"
+                else:
+                    content = "\n\n".join(content)
                 replyMsg = reply.TextMsg(toUser, fromUser, content)
                 return replyMsg.send()
             else:

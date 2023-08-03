@@ -3,8 +3,6 @@
 """
 logger
 
-Authors: zhangyongyue(zhangyongyue@baidu.com)
-Date:    2021/12/09
 """
 
 import logging

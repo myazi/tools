@@ -3,8 +3,6 @@
 """
 get rank result
 
-Authors: zhangyongyue(zhangyongyue@baidu.com)
-Date:    2021/12/10
 """
 
 import time

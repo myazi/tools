@@ -26,3 +26,56 @@
 26. help <cmd-name> 返回使用上面列出的命令之一信息。必须省略了'-' 字符在cmd。
 hfs fs -du /user/nlp-aurora/ | awk -F ' ''{printf "%.2fGB\t\t%s\n", $1/1024/1024/1024,$2}' | sort -n 查看afs上文件大小，GB单位，按大小排序
 hadoop fs -D hadoop.job.ugi=xxx -D fs.default.name=xx -getmerge  afs://yinglong.afs.baidu.com:9902/user/feed_rcmc/job_data/production/rcmc_data/${cur_day}/00/local_ec_nid_set_video z_${cur_day}_00.gz
+
+https://www.w3cschool.cn/hadoop/hadoop-7g4x22xn.html
+hadoop介绍：https://blog.csdn.net/m0_46914845/article/details/125762491
+一. Hadoop 是什么
+1）Hadoop是一个由Apache基金会所开发的分布式系统基础架构
+2）主要解决，海量数据的存储和海量数据的分析计算问题
+3）广义上来说，Hadoop通常是指一个更广泛的概念——Hadoop生态圈
+
+二. Hadoop 优势（4 高）
+1）高可靠性：Hadoop底层维护多个数据副本，所以即使Hadoop某个计算元素或存储出现故障，也不会导致数据的丢失
+2）高扩展性：在集群间分配任务数据，可方便的扩展数以千计的节点
+3）高效性：在MapReduce的思想下，Hadoop是并行工作的，以加快任务处理速度
+4）高容错性：能够自动将失败的任务重新分配
+
+三. Hadoop组成
+Hadoop1.x组成：Common（辅助工具）、HDFS（数据存储）、MapReduce（计算+资源调度）
+Hadoop2.x组成：Common（辅助工具）、HDFS（数据存储）、Yarn（资源调度）、MapReduce（计算）
+在Hadoop1.x时代，Hadoop中的MapReduce同时处理业务逻辑运算和资源的调度，耦合性较大
+在Hadoop2.x时代，增加了Yarn。Yarn只负责资源的调度，MapReduce只负责运算
+
+四. HDFS 架构概述，HDFS，是一个分布式文件系统
+1）NameNode（nn）：存储文件的元数据，如文件名，文件目录结构，文件属性（生成时间、副本数、文件权限），以及每个文件的块列表和块所在的DataNode等.
+（1）管理HDFS的名称空间
+（2）配置副本策略
+（3）管理数据块（Block）映射信息
+（4）处理客户端读写请求
+2）DataNode(dn)：在本地文件系统存储文件块数据，以及块数据的校验和.
+（1）存储实际的数据块
+（2）执行数据块的读/写操作
+3）Secondary NameNode(2nn)：每隔一段时间对NameNode元数据备份。并非NameNode的热备。当NameNode挂掉的时候，它并不能马上替换NameNode并提供服务.
+（1）辅助NameNode，分担其工作量，比如定期合并Fsimage和Edits，并推送给NameNode 
+（2）在紧急情况下，可辅助恢复NameNode
+
+五. YARN 架构概述
+YARN ，是一种资源协调者，是Hadoop的资源管理器
+1）ResourceManager（RM）：整个集群资源（内存、CPU等）的老大
+3）ApplicationMaster（AM）：单个任务运行的老大
+2）NodeManager（N M）：单个节点服务器资源老大
+4）Container：容器，相当一台独立的服务器，里面封装了任务运行所需要的资源，如内存、CPU、磁盘、网络等。
+说明1：客户端可以有多个
+说明2：集群上可以运行多个ApplicationMaster
+说明3：每个NodeManager上可以有多个Container
+
+六. MapReduce 架构概述
+MapReduce 将计算过程分为两个阶段：Map 和 Reduce
+1）Map 阶段并行处理输入数据、计算
+2）Reduce 阶段对 Map 结果进行汇总、计算、输出
+
+七. HDFS、YARN、MapReduce三者关系
+
+八. 大数据技术生态体系
+
+九. 推荐系统项目框架

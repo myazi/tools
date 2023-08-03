@@ -1,3 +1,183 @@
+# Git学习笔记
+
+一、gitgub安装，环境搭建
+
+linux：sudo apt-get install git 
+
+windows：
+
+git config --global use.name "myazi"
+
+git config --global user.email "xxx"
+
+git config --list 查看配置
+
+然后，我们可以看看自己电脑里有没有ssh密钥，linux下是在`/home/.ssh`，window是在`C:\Users\Username\.ssh`，有则备份删除，然后在终端中运行 ```bash ssh-keygen -t rsa -C "15270989505@163.com" ``` 按3个回车，密码为空，得到了两个文件：`id_rsa`和`id_rsa.pub`，然后打开id_rsa.pub，复制里面的内容，最后面的计算机名字不要复制，然后打开[https://github.com][9]，点击自己头像中的`Setting`，然后选择`SSH and GPG keys`，点击`New SSH key`，title随便写，下面的key粘贴刚才复制的内容，最后点击`Add SSH key`，成功`SSH and GPG keys`就会有SSH key的显示，如笔者界面所示(window和ubuntu各一个） 
+
+echo xxx > README.md 创建README.md文件
+
+git init ：初始化本地仓库
+
+git add README.md
+
+git commit -m "first commit"
+
+git remote add origin git@github.com:myazi/MLL.git  添加远程仓库的信息url 到本地 origin
+
+git push -u origin master 
+
+工作区、暂存区、版本库
+
+
+
+文件状态 四种：
+
+untracked：未被git跟踪
+
+modified：被修改，工作区
+
+staged：文件添加到了暂存区，但未提交到版本库
+
+commit：待提交到版本库
+
+
+
+git diff：工作区和暂存区的idff
+
+git diff --cached： 暂存区和上一次提交时的diff
+
+git diff HEAD：工作区和上一次提交时的diff
+
+git diff <commit id>：工作区和指定版本的diff
+
+git diff <commit1> <commit2>：两次提交的diff
+
+git diff <branch1> <branch2>：比较两个分支的diff
+
+
+
+git status：
+
+git add：
+
+git commit -m “first commit”: 暂存区提交到版本库，-m指定提交注释
+
+git commit -a ：-a 工作区直接提交到版本库 
+
+git commit --amend -m ：修改上一次提交的注释，工作区不能有改动
+
+git commit --amend ：修改上一次commit提交，包括提交注释和修改的文件
+
+
+
+git push <远程仓库的别名> <本地分支名>：提交本地分支到远程仓库
+
+git pull
+
+
+
+git log
+
+git rm ：工作区和暂存区都删除，rm只删除工作区文件，没有提交到暂存区
+
+git rm -r ：删除目录
+
+git rm --cached ：删除暂存区文件，但保留在工作区
+
+git mv：重命名工作区文件，并提交到暂存区
+
+git stash
+
+git branch -a ：显示本地分支
+
+git branch -d <branch>：删除指定本地分支
+
+git checkout <branch1> ：切到新分支
+
+git checkout -- <filename>：暂存区文件写回工作区
+
+git checkout <commit> <filename>：版本库提交写回暂存区和工作区
+
+
+
+git megre <branch> ：合并指定分支到当前分支
+
+git reset <commit id>：版本库回退到指定提交，并删除之前提交后的所有提交
+
+git reset <commit id> <file> ：版本库提交id回写暂存区
+
+git revert <commit id>：版本库新建一个与指定提交相同的提交
+
+
+
+
+
+Git基本操作
+
+Git status
+
+Git diff 暂存区和工作区 git diff 版本号之间，git diff 分支之间
+
+Git log
+
+Git add
+
+Git commit 
+
+Git commit --amend 取消上一次提交，重新提交一个版本
+
+ 
+
+Git checkout 暂存区到工作区
+
+Git branch
+
+-b 创建分支，并切换到该分支
+
+-d 删除分支
+
+-a 查看本地分支
+
+-m 修改当前分支名
+
+-r 查看远程分支
+
+Git reset 版本号 文件名 版本库到暂存区
+
+Git revert
+
+Git stash git stash apply 
+
+ 
+
+Rm mv是直接删除，git rm，git mv能起到误删作用
+
+Git rm 只删除工作区和暂存区的文件，还可以重版本库中拉回来
+
+Git mv 
+
+ 
+
+Git init
+
+Git config
+
+ 
+
+Git clone
+
+Git fetch
+
+Git pull git fetch + git merge
+
+Git push
+
+Git remote 远程仓库重命名
+
+ 
+
+Git help
+
 主干合入分支： 
 分支开发
 Git branch，确认在自己分支
@@ -34,3 +214,30 @@ git reset --soft origin/master
 git add .
 git commit -m "some comments"
 git push origin HEAD:refs/for/master
+
+
+### git基础
+git --version # git版本
+git config --global user.name "runoob" #初始化git用户
+git config --global user.email test@runoob.com #初始化git用户
+git config --global merge.tool vimdiff # 设置差异化分析工具
+git config --list #查看配置信息
+git config -e ##针对当前库修改配置信息
+git config -e --global   # 针对系统上所有仓库修改配置信息
+
+git init #初始化当前目录为git目录
+git clone git://xxx #拉取线上分支
+
+##
+git reset 和 git revert区别
+reset 回滚到指定版本，指定版本后的提交记录将被清除
+revert 新建一个提交记录回滚到指定版本，不影响制定版本后的提交记录
+git rm 将文件从暂存区和工作区中删除
+git mv 移动或重命名工作区文件
+git branch -d #删除分支
+git blame filename #查看文件的修改记录
+git diff 1bb3aa0ba90940c2e6bfcd2382f25e078ea91a5e 64f3013336ba211e1260ea925c4c42cf3c6e2294 all.git
+
+git tag -a v1.0  给指定版本打上tag标签
+
+ssh-keygen -t rsa -C "youremail@example.com" ##github绑定,执行回车，把共钥放到github上,即可访问自己的github
