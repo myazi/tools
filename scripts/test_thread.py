@@ -5,6 +5,15 @@ from queue import Queue, Empty
 from threading import Thread
 import concurrent.futures
 
+import multiprocessing
+
+"""
+多进程：可以利用多核CPU并行运算，占用资源最多，可启动数目比线程少，CPU密集型计算
+多线程：相比进程更轻量级、占用资源少，多线程只能并发执行，只能同时使用一个CPU;启动数目限制，占用内存资源，有线程切换开销
+CPU密集型，适合多进程
+IO密集型，适合多线程
+https://blog.csdn.net/march_26bin/article/details/132314800
+"""
 def worker(ip):
     start_time = time.time()
     time.sleep(1)
@@ -113,6 +122,11 @@ def test4(ips):
     end_time = time.time()
     print("test4 all time: " + str(end_time - start_time))
 
+def test_multiprocess(ips):
+    start_time = time.time()
+    with multiprocessing.Pool(processes=10) as pool:
+        pool.map(worker, ips)
+    end_time = time.time()
 
 if __name__ == '__main__':
     ips = [_ for _ in range(1000)]
@@ -121,3 +135,4 @@ if __name__ == '__main__':
     test3(ips)
     test4(ips)
     # test5 通过起多个进程，然后再起一个进程，以多线程方式请求预先启动的多个进程
+    test_multiprocess(ips)
